@@ -1,0 +1,137 @@
+<div class="container">
+  <div class="mat-elevation-z8 table-wrapper">
+    <table mat-table [dataSource]="dataSource">
+
+      <!-- Position Column -->
+       <!-- *TODO EL UNICO EVENTO CLICK -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td style="cursor: pointer;" mat-cell *matCellDef="let character"   (click)="onCharacterNameClick(character)">
+          {{character.name}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let character"> {{character.status}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="species">
+        <th mat-header-cell *matHeaderCellDef> Species </th>
+        <td mat-cell *matCellDef="let character"> {{character.species}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let character">
+          <ng-container *ngIf="character.type !== ''; else elseTypeBlock ">
+            {{character.type}}
+          </ng-container>
+          <ng-template #elseTypeBlock>
+            Typeless Chacacter
+          </ng-template>
+        </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="gender">
+        <th mat-header-cell *matHeaderCellDef> Gender </th>
+        <td mat-cell *matCellDef="let character"> {{character.gender}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef> Created at </th>
+        <td mat-cell *matCellDef="let character"> {{character.created | date }} </td>
+      </ng-container>
+
+
+
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+    </table>
+    <mat-paginator showFirstLastButtons [length]="dataSource.data.length" [pageSizeOptions]="[5,10,20]">
+    </mat-paginator>
+
+    <div>
+      <button [disabled]="currentPage === totalPages" (click)="nextCharacterSet()">Next Character Set</button>
+      <button [disabled]="currentPage <= 1" (click)="prevCharacterSet()">Previous Character Set</button>
+    </div>
+    <div>
+      <p>actual page is {{ currentPage }} ( pages left {{ totalPages - currentPage }})</p>
+    </div>
+
+    <ng-container *ngIf="noFilterMatch;  ">
+      <mat-card class="p-4 text-center" appearance="outlined">
+        <mat-icon color="warn" fontIcon="search_off" style="font-size: 28px; color: white;"></mat-icon>
+        <h3 style="color:white">No se encontraron coincidencias</h3>
+        <p style="color: white;"><button mat-button color="primary" (click)="clearFilters()">limpia los
+            filtros</button>.</p>
+      </mat-card>
+    </ng-container>
+
+
+
+
+    <mat-form-field appearance="fill">
+      <mat-label>Input Name</mat-label>
+      <input matInput type="text" [(ngModel)]="name" (selectionchange)="nameStatusFilter()"
+        placeholder="Search by name" />
+      @if (name) {
+      <button matSuffix mat-icon-button aria-label="Clear" (click)="name='';  nameStatusFilter()">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="status" (selectionChange)="nameStatusFilter()">
+        <mat-option value="">All</mat-option>
+        <mat-option value="unknown">Unknown</mat-option>
+        <mat-option value="dead">Dead</mat-option>
+        <mat-option value="alive">Alive</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div style="display: flex; width: 100%; justify-content: space-between; " >
+      <div>
+        <h3>Species Totals</h3>
+        <ul>
+          <li *ngFor="let type of speciesCount | keyvalue">
+            "{{ type.key }}": {{ type.value }}
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3>Type Totals</h3>
+        <ul>
+          <li *ngFor="let type of typeCount | keyvalue">
+            "{{ type.key }}": {{ type.value }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+
+  <app-card id="selectcard" [characterName]="characterName$" [characterImage]="characterImage$"
+    [characterLocation]="characterLocation$" [episodeName]="episodeName$"
+    [characterNameCoincidences]="characterNameCoincidences$"
+    [originPlace]="characterBirthPlace$" [selectedOriginCoincidence]="characterOriginCoincidence$"></app-card>
+</div>
+
+
+
+
+<!--
+<button mat-raised-button color="primary" (click)="filter()">
+  Buscar
+</button> -->

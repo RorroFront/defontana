@@ -1,0 +1,47 @@
+
+<div style="display: flex; align-items: center; flex-direction: column;" *ngIf="like()"  >
+  <p>Te gusta <strong>{{ characterName | async }}</strong></p>
+  <p>Está en <strong>{{ characterLocation | async }}</strong></p>
+  <p>Aparece en el episodio <strong>{{ episodeName | async }}</strong></p>
+</div>
+
+
+<div class="container">
+  <mat-card style="color:white; width: 50%;" class="example-card" appearance="outlined">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>
+        <p *ngIf="characterName | async as name">
+          {{ name }}
+        </p>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <p *ngIf="characterLocation | async as location">last known location: <span
+            style="font-style: italic;">{{location}}</span></p>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image *ngIf="characterImage | async as image" [src]="image " alt="Photo of a Shiba Inu">
+    <mat-card-content>
+      <p *ngIf="episodeName | async as episode"> you propably have seen this character in: <span
+          style="font-style: italic;">{{episode}}</span>
+      </p>
+        <p>this list of individual(s) are current residents of this location</p>
+      <ng-container *ngIf="characterNameCoincidences | async as characterNames">
+        <div *ngFor="let item of characterNames">
+          <p> <span style="font-style: italic;">{{ item }}  </span></p>
+        </div>
+      </ng-container>
+      <p *ngIf="originPlace | async as origin"> this character was born in: <span
+        style="font-style: italic;">{{origin}}</span>
+      </p>
+      <p *ngIf="selectedOriginCoincidence | async as originCoincidence">other characters born here: <span
+        style="font-style: italic;">{{originCoincidence}}</span>
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="likeIt()" >LIKE</button>
+      <button mat-button>SHARE</button>
+    </mat-card-actions>
+  </mat-card>
+
+</div>
